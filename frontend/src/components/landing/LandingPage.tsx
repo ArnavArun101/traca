@@ -363,14 +363,28 @@ export function LandingPage({ onLaunch }: LandingPageProps) {
 
       {/* Footer */}
       <footer className="border-t border-border/50 bg-card/30">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Activity className="h-4 w-4 text-primary" />
-            <span className="font-medium text-foreground">traca</span>
+        <div className="mx-auto flex max-w-6xl flex-col items-center px-6 py-6">
+          <div className="flex w-full items-center justify-between">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Activity className="h-4 w-4 text-primary" />
+              <span className="font-medium text-foreground">traca</span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Built with Deriv API, Mistral AI & React
+            </p>
           </div>
-          <p className="text-xs text-muted-foreground">
-            Built with Deriv API, Mistral AI & React
-          </p>
+
+          {/* Easter Egg */}
+          <div className="mt-4 opacity-30 hover:opacity-100 transition-opacity duration-500">
+            <a
+              href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[11px] text-muted-foreground/60 hover:text-primary transition-colors"
+            >
+              Special thanks to Deriv & lablab for organizing this hackathon ✨
+            </a>
+          </div>
         </div>
       </footer>
     </div>
