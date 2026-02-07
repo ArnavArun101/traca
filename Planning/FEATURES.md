@@ -22,11 +22,11 @@ Features users expect. Missing = product feels incomplete or users leave for com
 
 | Feature | Why Expected | Complexity | Dependencies | Notes |
 |---------|--------------|------------|--------------|-------|
-| Real-time price data & quotes | Industry standard; 65K+ assets expected | LOW | Deriv API WebSocket integration | 24/7 availability for forex/crypto/synthetics |
-| Multi-asset support | Traders diversify across forex, crypto, indices, commodities | MEDIUM | Deriv API multi-market endpoints | Must support ALL Deriv markets including synthetic indices |
+| Real-time price data & quotes | Industry standard; 65K+ assets expected | LOW | Deriv API integration | 24/7 availability for forex/crypto |
+| Multi-asset support | Traders diversify across forex, crypto, stocks | MEDIUM | Deriv multi-market endpoints | Support for global stocks, forex, and crypto |
 | Basic technical indicators | RSI, MACD, moving averages are foundational | LOW | Chart rendering library | 20-30 common indicators minimum |
 | Price alerts & notifications | Every platform has this; cloud-based execution | LOW | Background job scheduler + notification service | Email, push, SMS channels |
-| Historical data access | Backtesting and context require history | MEDIUM | Data storage + retrieval optimization | At least 12 months historical data |
+| Historical data access | Backtesting and context require history | MEDIUM | Data storage + retrieval optimization | Intraday and historical data |
 | Chart visualization | Visual representation is non-negotiable | MEDIUM | Charting library (TradingView, Recharts) | Multiple timeframes (1m to 1M) |
 | Portfolio/position tracking | Users need to see P&L, open positions | MEDIUM | Deriv API trading account integration | Real-time synchronization |
 
@@ -182,7 +182,7 @@ Critical understanding of what must be built first and what depends on earlier w
 
 ```
 Core Infrastructure
-├── Deriv API Integration (WebSocket)
+├── Deriv API Integration
 ├── Database Schema (users, trades, conversations)
 ├── Authentication & Authorization
 └── Basic Frontend Framework
@@ -190,7 +190,7 @@ Core Infrastructure
 ↓ enables ↓
 
 Market Data Layer
-├── Real-time Price Feeds
+├── Real-time Price Updates
 ├── Historical Data Storage
 ├── Chart Visualization
 └── Basic Technical Indicators
@@ -300,7 +300,7 @@ Multi-Modal Capabilities
 
 ## MVP Recommendation
 
-For hackathon MVP (Deriv context: time-constrained, demo-focused), prioritize:
+For hackathon MVP (time-constrained, demo-focused), prioritize:
 
 ### Must-Have (Core Demo Value)
 
@@ -358,7 +358,7 @@ For hackathon MVP (Deriv context: time-constrained, demo-focused), prioritize:
 
 3. **AI Analyst Personas**: NO competitor combines market analysis + social media automation with autonomous AI personas. LinkedIn finance content is manually created. We automate it with personality and performance tracking.
 
-4. **Deriv Market Specialization**: Generic platforms treat synthetic indices as an afterthought. We provide deep synthetic indices expertise as a moat.
+4. **Deriv Market Specialization**: We provide deep insights across stocks, forex, and crypto.
 
 5. **Unified Platform**: Current landscape requires 3+ tools:
    - Analysis tool (TradingView/TrendSpider)
@@ -370,7 +370,7 @@ For hackathon MVP (Deriv context: time-constrained, demo-focused), prioritize:
 
 **Where we could lose:**
 
-1. **Execution**: If Deriv is slow/buggy, users blame us. Mitigation: Deep-link to Deriv for execution.
+1. **Execution**: If the API is slow/buggy, users blame us.
 
 2. **AI Quality**: If explanations are generic/"AI slop", credibility lost. Mitigation: Heavy prompt engineering + human review of templates.
 
@@ -507,7 +507,7 @@ Deriv API Integration → Market Data → AI Analysis → Conversational UI
 - **Behavioral coaching**: Edgewonk Tiltmeter, TradesViz psychology tracking ([Edgewonk](https://edgewonk.com/), [TradesViz Blog](https://www.tradesviz.com/blog/trading-journal-psychology-tracking/))
 - **Market data**: 55%+ AI adoption, $4.3B market ([Pragmatic Coders](https://www.pragmaticcoders.com/blog/top-ai-tools-for-traders))
 - **Gamification risks**: Robinhood $7.5M settlement, 5.17% volume increase ([Berkeley Technology Law Journal](https://btlj.org/2025/11/the-gamification-of-investments-a-comparative-approach-between-the-us-and-eu/))
-- **Deriv API**: Official documentation ([Deriv API](https://api.deriv.com/), [Deriv Developers](https://developers.deriv.com/))
+- **Deriv API**: Official documentation ([Deriv API](https://api.deriv.com/))
 
 ### Medium Confidence (Single Authoritative Source)
 
@@ -518,8 +518,8 @@ Deriv API Integration → Market Data → AI Analysis → Conversational UI
 
 ### Assumptions & Gaps
 
-- **User preferences**: Retail vs. prop firm segment analysis based on general market trends, not Deriv-specific data
-- **Feature complexity estimates**: Based on general software development timelines, not Deriv API-specific constraints
+- **User preferences**: Retail vs. prop firm segment analysis based on general market trends.
+- **Feature complexity estimates**: Based on general software development timelines.
 - **MVP scope**: Hackathon context assumed; timeline impacts feasibility
 - **Regulatory landscape**: General compliance concerns noted, but region-specific regulations not researched
 
@@ -532,7 +532,7 @@ Deriv API Integration → Market Data → AI Analysis → Conversational UI
 1. **Conversational AI with plain-language explanations**: Core differentiator
 2. **Behavioral nudges (1-2 patterns)**: Provable value (40-60% impact)
 3. **AI analyst persona (one)**: Unique in market
-4. **Deriv synthetic indices support**: Competitive moat
+4. **Deriv insights**: Competitive moat
 5. **Split-view dashboard**: Expected UX pattern
 
 ### Skip This (Low ROI or High Risk)
@@ -549,11 +549,11 @@ Deriv API Integration → Market Data → AI Analysis → Conversational UI
 2. **Edgewonk adding AI chat**: Natural evolution for them
 3. **LinkedIn/X algorithm changes**: Social automation viability
 4. **Regulatory crackdowns**: Fintech regulation tightening in EU/US
-5. **Deriv API changes**: Platform dependency risk
+5. **API changes**: Platform dependency risk
 
 ### Research Further (Gaps)
 
-1. **Deriv API rate limits**: Critical for real-time features
+1. **API rate limits**: Critical for real-time features
 2. **LLM costs at scale**: Claude/GPT-4 per-user cost modeling
 3. **LinkedIn/X automation policies**: ToS compliance for AI posting
 4. **User segment validation**: Interview retail + prop traders on feature priorities

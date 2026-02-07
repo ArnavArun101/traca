@@ -42,13 +42,13 @@ For a hackathon context, this architecture prioritizes **demo-ability** while ma
 │  ┌────────────┴─────┐  ┌────┴──────┐  ┌────┴─────────────┐    │
 │  │  Market Data     │  │   LLM      │  │   Behavioral     │    │
 │  │  Processor       │  │   Engine   │  │   Analyzer       │    │
-│  │  - Deriv WS      │  │  - Llama/  │  │  - Pattern       │    │
+│  │  - Deriv API     │  │  - Llama/  │  │  - Pattern       │    │
 │  │    client        │  │    Mistral │  │    detection     │    │
 │  │  - Price stream  │  │  - Context │  │  - Trade history │    │
 │  │  - Trade events  │  │    memory  │  │    analysis      │    │
 │  │  - Data buffer   │  │  - Prompt  │  │  - Bias scoring  │    │
-│  └──────────────────┘  │    engine  │  └──────────────────┘    │
-│                        └────────────┘                           │
+│  │                  │  │    engine  │  └──────────────────┘    │
+│  └──────────────────┘  └────────────┘                           │
 │  ┌──────────────────────────────────────────────────────────┐  │
 │  │           Content Generation & Publishing                │  │
 │  │  - Social content creator (LLM-powered)                  │  │
@@ -66,10 +66,10 @@ For a hackathon context, this architecture prioritizes **demo-ability** while ma
 └──────────────────────────────────────┬────────────────────────┘
                                        │
                         ┌──────────────┴──────────────┐
-                        │    Deriv WebSocket API      │
-                        │  - Real-time price feeds    │
-                        │  - Trade history            │
-                        │  - Account data             │
+                        │          Deriv API          │
+                        │  - Real-time quote data     │
+                        │  - Intraday trade history   │
+                        │  - Global market coverage   │
                         └─────────────────────────────┘
 ```
 
@@ -78,7 +78,7 @@ For a hackathon context, this architecture prioritizes **demo-ability** while ma
 | Component | Responsibility | Communicates With | Data Flow Direction |
 |-----------|---------------|-------------------|---------------------|
 | **WebSocket Connection Manager** | Manages all client connections, routes messages, maintains session state | All backend components → Frontend | Bidirectional |
-| **Market Data Processor** | Connects to Deriv API, streams price data, buffers trade history | WS Manager, Behavioral Analyzer, Data Persistence | External → Internal |
+| **Market Data Processor** | Connects to Deriv API, fetches price data, buffers trade history | WS Manager, Behavioral Analyzer, Data Persistence | External → Internal |
 | **LLM Engine** | Runs local LLM inference (Llama/Mistral), manages conversation context, generates responses | WS Manager, Behavioral Analyzer, Content Generator | Request/Response |
 | **Behavioral Analyzer** | Detects trading patterns, identifies biases, calculates sentiment scores | Market Data Processor, LLM Engine, WS Manager | Async processing |
 | **Content Generator** | Creates social media posts, manages approval workflow, publishes to platforms | LLM Engine, WS Manager, External APIs | Request → External |
@@ -210,7 +210,7 @@ Market Data Processor → Behavioral Analyzer
 | **FastAPI** | 0.115+ | Web framework | Core application, WebSocket server |
 | **uvicorn** | 0.32+ | ASGI server | Run FastAPI with WebSocket support |
 | **websockets** | 14.1+ | WebSocket library | Low-level WS handling (FastAPI uses this) |
-| **deriv-api** | 1.0+ | Deriv WebSocket client | Market Data Processor component |
+| **deriv_api** | Latest | Deriv API client | Market Data Processor component |
 | **Ollama** | Latest | Local LLM server | LLM Engine - run Llama/Mistral models |
 | **langchain** | 0.3+ | LLM orchestration | Context management, prompt templates |
 | **Redis** | 7.4+ | In-memory cache | Session state, chat history, rate limiting |
@@ -247,7 +247,7 @@ Market Data Processor → Behavioral Analyzer
 
 | Service | Purpose | Integration Approach |
 |---------|---------|---------------------|
-| **Deriv WebSocket API** | Real-time market data, trade history | Python client library (`deriv-api`) |
+| **Deriv API** | Real-time market data, trade history | Python client library (`deriv_api`) |
 | **LinkedIn API** | Post publishing | HTTP REST via `requests` or `httpx` |
 | **X (Twitter) API** | Post publishing | HTTP REST via unified social media API |
 | **Ayrshare/Late** (optional) | Unified social API | Simplifies multi-platform posting |
@@ -286,7 +286,7 @@ Priority 3: Integration test
 
 ```
 Priority 1: Market Data Processor
-├── Deriv WebSocket subscription
+├── Deriv API integration
 ├── Price data normalization
 ├── Trade history fetching
 └── Data buffering logic
@@ -303,10 +303,10 @@ Priority 3: Data persistence
 
 **Why this order:**
 - Dashboard is most **demo-friendly** component - prioritize visual impact
-- Data processor must handle **reconnection** (Deriv API has 2-min timeout)
+- Data processor must handle rate limits
 - Persistence can be **async** - doesn't block real-time display
 
-**Deliverable:** Live dashboard showing real Deriv market data
+**Deliverable:** Live dashboard showing real market data
 
 ### Phase 3: LLM Integration (Days 3-4)
 **Goal:** Chat interface with context-aware responses
@@ -580,7 +580,7 @@ async def flush_buffer():
 **Red flag:** `response = llm.invoke(prompt)` in `websocket.receive_text()` loop.
 
 ### Anti-Pattern 6: No Error Boundaries for External APIs
-**What:** Direct calls to Deriv/Social APIs without try/catch or retry logic.
+**What:** Direct calls to APIs without try/catch or retry logic.
 
 **Why bad:** Single API failure crashes entire backend, demo becomes unreliable.
 
@@ -768,20 +768,18 @@ class ConnectionManager:
 ### Market Data Processor
 
 **Responsibilities:**
-- Establish and maintain Deriv WebSocket connection
-- Subscribe to price feeds for specified instruments
-- Fetch historical trade data on startup
+- Establish connection to Deriv API
+- Poll price data for specified instruments
+- Fetch historical intraday data on startup
 - Normalize and buffer incoming data
 - Emit events for price updates and trade events
 
 **Key Interfaces:**
 ```python
 class MarketDataProcessor:
-    async def connect_deriv(self)
+    async def connect(self)
     async def subscribe_prices(self, symbols: List[str])
-    async def fetch_trade_history(self, limit: int = 100)
-    async def on_price_update(self, callback: Callable)
-    async def on_trade_event(self, callback: Callable)
+    async def fetch_trade_history(self, symbol: str, limit: int = 100)
 ```
 
 **Data Normalization:**
@@ -984,9 +982,8 @@ class ContentGenerator:
 - [MVP Tech Stack Guide 2026: Build Fast, Stay Compliant | by Cabot Technology Solutions | Medium](https://medium.com/@cabotsolutions/mvp-tech-stack-guide-2026-build-fast-stay-compliant-94e1bc34fee7)
 
 ### Deriv API
-- [Deriv WebSocket API Documentation](https://developers.deriv.com/docs/websockets)
-- [@deriv/deriv-api 1.0.11 | Documentation](https://deriv-com.github.io/deriv-api/)
-- [Easy steps to keep your websocket connection live | Deriv API](https://developers.deriv.com/docs/keep-connection-live)
+- [Deriv API Documentation](https://api.deriv.com/)
+- [Deriv Python Library](https://github.com/RomelTorres/deriv_api)
 
 ## Confidence Assessment
 
@@ -1003,7 +1000,7 @@ class ContentGenerator:
 
 1. **LLM Context Window Management**: How to handle long chat sessions when context exceeds model's window (8K-32K tokens)? Consider implementing automatic summarization or sliding window.
 
-2. **Deriv API Rate Limits**: What are the actual rate limits for Deriv WebSocket subscriptions? Need to test with real API.
+2. **Deriv API Rate Limits**: What are the actual rate limits for Deriv? Need to test with real API.
 
 3. **Social API Credentials**: LinkedIn/X API access requirements in 2026? May need developer accounts in advance.
 
