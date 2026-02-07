@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-# TODO — Traca.ai
-=======
-# TODO — traca
->>>>>>> 76a861085ca3295a412df0a1c7debd59dedfbe51
-
-Tracking completed and unfinished tasks across the project.
-*Last updated: 2026-02-07*
-
----
-
 ## ✅ Completed
 
 ### Backend Scaffolding
