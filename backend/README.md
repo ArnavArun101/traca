@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Traca.ai Backend
 
 This is the FastAPI backend for the Traca.ai AI Trading Analyst.
@@ -6,16 +5,13 @@ This is the FastAPI backend for the Traca.ai AI Trading Analyst.
 # traca Backend
 
 This is the FastAPI backend for the traca AI Trading Analyst.
->>>>>>> 76a861085ca3295a412df0a1c7debd59dedfbe51
 
 ## Features
 - **WebSocket Connection Manager**: Handles real-time client sessions.
 - **Market Data Processor**: Integrates with Deriv API for market data updates.
-<<<<<<< HEAD
 - **LLM Engine**: Connects to local Ollama server for market analysis and coaching.
 =======
 - **LLM Engine**: Connects to Mistral API for market analysis and coaching.
->>>>>>> 76a861085ca3295a412df0a1c7debd59dedfbe51
 - **Behavioral Analyzer**: Detects trading patterns (win streaks, risk escalation).
 - **Social Content Generator**: Drafts LinkedIn and X posts based on market trends.
 
