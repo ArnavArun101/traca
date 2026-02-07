@@ -22,31 +22,14 @@
 - [x] Pitfalls & anti-patterns (`Planning/PITFALLS.md`)
 - [x] README (`README.md`)
 
----
-
-## 🔧 In Progress
-
-### Backend — Core Services
-<<<<<<< HEAD
-- [ ] Wire LLM engine to an actual open-source model (Llama/Mistral)
-- [ ] Flesh out content generator beyond stub
-- [ ] Add trade history import from Deriv API
-- [ ] Persist chat history to DB in WebSocket flow
-
-### Backend — Behavioral Coaching
-- [x] Expand behavioral patterns beyond position-size & rapid-entry detection
-- [x] Discipline scoring system (% trades following user-defined rules)
-- [x] Real-time nudge delivery through WebSocket
-=======
-
-## 📋 Not Started
-
 ### Frontend
-- [ ] React project setup
-- [ ] Split-view dashboard layout (panels + chat)
-- [ ] Chart visualization (TradingView / Recharts)
-- [ ] Rich chat responses (Markdown, inline charts, tables, sentiment gauges)
-- [ ] Responsive / mobile-friendly styling
+- [x] React project setup
+- [x] Split-view dashboard layout (panels + chat)
+- [x] Chart visualization (TradingView / Recharts)
+- [x] Rich chat responses (Markdown, inline charts, tables, sentiment gauges)
+- [x] Responsive / mobile-friendly styling
+- [x] Landing page with feature showcase
+- [x] Login & Registration pages with themed UI
 
 ### Market Analysis
 - [x] Real-time price streaming via Deriv WebSocket API
@@ -58,14 +41,14 @@
 - [x] News & event summarisation per instrument
 
 ### Behavioral Coaching
-<<<<<<< HEAD
+- [x] Expand behavioral patterns beyond position-size & rapid-entry detection
+- [x] Discipline scoring system (% trades following user-defined rules)
+- [x] Real-time nudge delivery through WebSocket
 - [x] Cost-of-emotion analysis ("FOMO cost you $X this month")
 - [x] Win/loss pattern recognition from trade history
 - [x] Break / limit / reflection suggestions
 - [x] Celebration of sustainable trading habits & streaks
 - [x] Psychology tagging system (FOMO, REVENGE, HESITATION)
-- [x] Real-time nudge delivery through WebSocket
-- [x] Discipline scoring system (% trades following user-defined rules)
 
 ### Social Content & AI Personas
 - [x] AI analyst persona definition & prompt engineering
@@ -74,6 +57,22 @@
 - [x] Daily/weekly market summary generation
 - [x] Draft / approval workflow
 - [x] Compliance & disclaimer filters
+
+---
+
+## 🔧 In Progress
+
+### Backend — Core Services
+- [ ] Wire LLM engine to an actual open-source model (Llama/Mistral)
+- [ ] Flesh out content generator beyond stub
+- [ ] Add trade history import from Deriv API
+- [ ] Persist chat history to DB in WebSocket flow
+
+---
+
+## 📋 Not Started
+
+### Social Content — Publishing
 - [ ] LinkedIn OAuth integration & posting
 - [ ] X/Twitter OAuth integration & posting
 - [ ] Post scheduling system

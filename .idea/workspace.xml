@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="08d68c05-d79a-4c2a-96e4-d9104db58264" name="Changes" comment="Market Analysis part complete and TODO updated">
+    <list default="true" id="08d68c05-d79a-4c2a-96e4-d9104db58264" name="Changes" comment="Frontend: Landing Page and Main Page complete">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app/api/websocket_endpoints.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/api/websocket_endpoints.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app/core/websocket_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/core/websocket_manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app/services/market_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/services/market_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,7 +14,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="37" />
+    <option name="cachedIndexableFilesCount" value="85" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Merge.Settings">
@@ -126,7 +123,7 @@
       <updated>1770454257648</updated>
       <workItem from="1770454259118" duration="4445000" />
       <workItem from="1770458882514" duration="4638000" />
-      <workItem from="1770463849655" duration="7274000" />
+      <workItem from="1770463849655" duration="8261000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <option name="closed" value="true" />
@@ -176,7 +173,23 @@
       <option name="project" value="LOCAL" />
       <updated>1770463949963</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Frontend: Landing Page and Main Page complete">
+      <option name="closed" value="true" />
+      <created>1770479343193</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1770479343193</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Frontend: Landing Page and Main Page complete">
+      <option name="closed" value="true" />
+      <created>1770479460946</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1770479460946</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -200,7 +213,8 @@
     <MESSAGE value="Backend added" />
     <MESSAGE value="TODO updated" />
     <MESSAGE value="Market Analysis part complete and TODO updated" />
-    <option name="LAST_COMMIT_MESSAGE" value="Market Analysis part complete and TODO updated" />
+    <MESSAGE value="Frontend: Landing Page and Main Page complete" />
+    <option name="LAST_COMMIT_MESSAGE" value="Frontend: Landing Page and Main Page complete" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -209,6 +223,15 @@
           <url>file://$PROJECT_DIR$/main.py</url>
           <line>8</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/backend/app/services/personas.py</url>
+          <line>7</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/backend/app/services/llm_engine.py</url>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
