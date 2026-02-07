@@ -1,14 +1,14 @@
-# DerivTrader
+# Traca.ai
 
 AI-powered trading analyst that combines real-time market intelligence, behavioural coaching, and social media automation.
 
-Powered by **Deriv API**, DerivTrader serves both retail and prop firm traders through a unified interface that turns complex market data into actionable understanding.
+Powered by **Deriv API**, Traca.ai serves both retail and prop firm traders through a unified interface that turns complex market data into actionable understanding.
 
 ---
 
 ## 🚀 Overview
 
-DerivTrader is a split-view web platform featuring dashboard panels alongside a conversational AI analyst. It provides:
+Traca.ai is a split-view web platform featuring dashboard panels alongside a conversational AI analyst. It provides:
 - **Instant Market Intelligence:** Plain-language explanations of price movements and technical patterns.
 - **Behavioural Coaching:** Detection of emotional or impulsive trading patterns (FOMO, revenge trading) with timely nudges.
 - **Social Automation:** Autonomous AI personas that generate and draft market updates for LinkedIn and X.
@@ -23,7 +23,7 @@ DerivTrader is a split-view web platform featuring dashboard panels alongside a 
 
 ## 🏗️ Architecture
 
-DerivTrader uses a **Modular Monolith** architecture optimized for real-time data flow and AI inference:
+Traca.ai uses a **Modular Monolith** architecture optimized for real-time data flow and AI inference:
 
 - **Frontend:** React (Vite) + TailwindCSS + shadcn/ui + Zustand.
 - **Backend:** FastAPI (Python) + Uvicorn + WebSockets.

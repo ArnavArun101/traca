@@ -1,4 +1,4 @@
-# DerivTrader
+# Traca.ai
 
 ## What This Is
 

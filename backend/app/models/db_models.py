@@ -17,3 +17,22 @@ class ChatHistory(SQLModel, table=True):
     role: str  # user/assistant
     content: str
     timestamp: int = Field(default_factory=lambda: int(time.time()))
+
+class PriceHistory(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    symbol: str = Field(index=True)
+    open: float
+    high: float
+    low: float
+    close: float
+    epoch: int = Field(index=True)
+
+class PriceAlert(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    session_id: str = Field(index=True)
+    symbol: str
+    target_price: float
+    direction: str  # "above" or "below"
+    is_active: bool = Field(default=True)
+    created_at: int = Field(default_factory=lambda: int(time.time()))
+    triggered_at: Optional[int] = Field(default=None)

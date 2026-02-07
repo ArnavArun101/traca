@@ -1,6 +1,6 @@
-# DerivTrader Backend
+# Traca.ai Backend
 
-This is the FastAPI backend for the DerivTrader AI Trading Analyst.
+This is the FastAPI backend for the Traca.ai AI Trading Analyst.
 
 ## Features
 - **WebSocket Connection Manager**: Handles real-time client sessions.

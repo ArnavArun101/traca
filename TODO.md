@@ -1,4 +1,4 @@
-# TODO — DerivTrader
+# TODO — Traca.ai
 
 Tracking completed and unfinished tasks across the project.
 *Last updated: 2026-02-07*
@@ -56,13 +56,13 @@ Tracking completed and unfinished tasks across the project.
 - [ ] Responsive / mobile-friendly styling
 
 ### Market Analysis
-- [ ] Real-time price streaming via Deriv WebSocket API
-- [ ] Basic technical indicators (RSI, MACD, moving averages)
-- [ ] Price alerts & notifications
-- [ ] Historical data storage & retrieval
-- [ ] Multi-asset support (forex, crypto, synthetic indices)
-- [ ] Plain-language market explanations ("Why did EUR/USD spike?")
-- [ ] News & event summarisation per instrument
+- [x] Real-time price streaming via Deriv WebSocket API
+- [x] Basic technical indicators (RSI, MACD, moving averages)
+- [x] Price alerts & notifications
+- [x] Historical data storage & retrieval
+- [x] Multi-asset support (forex, crypto, synthetic indices)
+- [x] Plain-language market explanations ("Why did EUR/USD spike?")
+- [x] News & event summarisation per instrument
 
 ### Behavioral Coaching
 - [ ] Cost-of-emotion analysis ("FOMO cost you $X this month")

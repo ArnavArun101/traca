@@ -1,6 +1,6 @@
 # Technology Stack: AI-Powered Trading Analyst
 
-**Project:** DerivTrader - AI Trading Analyst
+**Project:** Traca.ai - AI Trading Analyst
 **Researched:** 2026-02-07
 **Overall Confidence:** HIGH (verified with 2026 sources)
 
