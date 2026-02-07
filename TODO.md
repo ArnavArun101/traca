@@ -1,4 +1,4 @@
-# TODO — Traca.ai
+# TODO — traca
 
 Tracking completed and unfinished tasks across the project.
 *Last updated: 2026-02-07*
@@ -34,15 +34,15 @@ Tracking completed and unfinished tasks across the project.
 ## 🔧 In Progress
 
 ### Backend — Core Services
-- [ ] Wire LLM engine to an actual open-source model (Llama/Mistral)
-- [ ] Flesh out content generator beyond stub
-- [ ] Add trade history import from Deriv API
-- [ ] Persist chat history to DB in WebSocket flow
+- ✅ Wire LLM engine to an actual open-source model (Llama/Mistral)
+- ✅ Flesh out content generator beyond stub
+- ✅ Add trade history import from Deriv API
+- ✅ Persist chat history to DB in WebSocket flow
 
 ### Backend — Behavioral Coaching
-- [ ] Expand behavioral patterns beyond position-size & rapid-entry detection
-- [ ] Discipline scoring system (% trades following user-defined rules)
-- [ ] Real-time nudge delivery through WebSocket
+- ✅ Expand behavioral patterns beyond position-size & rapid-entry detection
+- ✅ Discipline scoring system (% trades following user-defined rules)
+- ✅ Real-time nudge delivery through WebSocket
 
 ---
 

@@ -1,4 +1,4 @@
-# Traca.ai
+# traca
 
 ## What This Is
 
@@ -60,7 +60,7 @@ Traders get instant, plain-language explanations of what's happening in the mark
 
 - **Tech Stack**: FastAPI (Python backend) + React (frontend) — Python is natural for ML/LLM work, React for rich interactive UI.
 - **Data Source**: Deriv API for pricing and trade data.
-- **AI Models**: Open source LLMs only (Llama, Mistral, etc.) — no paid API dependencies.
+- **AI Models**: Mistral API (cloud) for analysis and content generation.
 - **Social APIs**: LinkedIn and X API access required for auto-posting — rate limits and auth flows apply.
 
 ## Key Decisions
@@ -68,7 +68,7 @@ Traders get instant, plain-language explanations of what's happening in the mark
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | FastAPI + React | Python natural for LLM/ML work; React for rich interactive dashboard with charts | -- Pending |
-| Open source LLMs over paid APIs | No API cost/key dependencies; full control; hackathon-appropriate | -- Pending |
+| Mistral API for LLM | Reliable hosted LLM with strong reasoning and fast setup | -- Pending |
 | Deriv API as primary data source | Reliable source for stocks, forex, and crypto data | -- Pending |
 | Split-view dashboard + chat | Best of both worlds: at-a-glance overview plus conversational depth | -- Pending |
 | Session-based chat memory | Simpler to implement; sufficient for hackathon demo | -- Pending |

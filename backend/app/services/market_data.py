@@ -41,6 +41,8 @@ class MarketDataProcessor:
         self.subscribed_symbols: set = set()
         self.subscriptions: Dict = {}  # symbol -> subscription_id
         self.latest_prices: Dict[str, float] = {}  # symbol -> latest price
+        self.keepalive_task = None
+        self.keepalive_interval = 30
 
     async def connect(self):
         if not self.api_token:
@@ -53,9 +55,38 @@ class MarketDataProcessor:
             await self.api.authorize(self.api_token)
             self.is_connected = True
             logger.info("Deriv API initialized and authorized")
+            self._start_keepalive()
+            await self._resubscribe()
         except Exception as e:
             logger.error(f"Failed to initialize Deriv: {e}")
             self.is_connected = False
+
+    def _start_keepalive(self):
+        if self.keepalive_task and not self.keepalive_task.done():
+            return
+        self.keepalive_task = asyncio.create_task(self._keepalive_loop())
+
+    async def _keepalive_loop(self):
+        while True:
+            if not self.is_connected or not self.api:
+                await asyncio.sleep(self.keepalive_interval)
+                continue
+            try:
+                await self.api.ping()
+            except Exception as e:
+                logger.warning(f"Deriv keepalive failed: {e}. Reconnecting...")
+                self.is_connected = False
+                await asyncio.sleep(5)
+                await self.connect()
+            await asyncio.sleep(self.keepalive_interval)
+
+    async def _resubscribe(self):
+        if not self.subscribed_symbols:
+            return
+        symbols = list(self.subscribed_symbols)
+        self.subscribed_symbols.clear()
+        for symbol in symbols:
+            await self.subscribe_ticks(symbol)
 
     async def _handle_tick(self, data):
         """Handle incoming tick data from Deriv subscription."""
@@ -92,8 +123,17 @@ class MarketDataProcessor:
             self.subscribed_symbols.add(symbol)
             
             async def listen_to_ticks(subscription_source):
-                async for tick in subscription_source:
-                    await self._handle_tick(tick)
+                # python-deriv-api returns an rx Observable, not an async iterator
+                def on_next(tick):
+                    asyncio.create_task(self._handle_tick(tick))
+
+                def on_error(err):
+                    logger.error(f"Tick stream error for {symbol}: {err}")
+
+                try:
+                    subscription_source.subscribe(on_next=on_next, on_error=on_error)
+                except Exception as e:
+                    logger.error(f"Failed to subscribe to tick stream for {symbol}: {e}")
 
             asyncio.create_task(listen_to_ticks(source))
             logger.info(f"Subscribed to real-time updates for {symbol}")
@@ -219,6 +259,32 @@ class MarketDataProcessor:
     def get_latest_price(self, symbol: str) -> Optional[float]:
         """Return the latest cached price for a specific symbol."""
         return self.latest_prices.get(symbol)
+    async def fetch_account_trade_history(self, limit: int = 50):
+        if not self.is_connected:
+            await self.connect()
 
+        if not self.is_connected:
+            return {"status": "error", "message": "Deriv API not connected."}
+
+        try:
+            response = await self.api.statement({"limit": limit})
+            transactions = response.get("statement", {}).get("transactions", [])
+            normalized = []
+            for tx in transactions:
+                normalized.append(
+                    {
+                        "transaction_id": tx.get("transaction_id"),
+                        "symbol": tx.get("symbol"),
+                        "amount": float(tx.get("amount", 0)) if tx.get("amount") is not None else None,
+                        "balance": float(tx.get("balance", 0)) if tx.get("balance") is not None else None,
+                        "transaction_time": tx.get("transaction_time"),
+                        "action_type": tx.get("action_type"),
+                        "longcode": tx.get("longcode"),
+                    }
+                )
+            return {"status": "success", "count": len(normalized), "trades": normalized}
+        except Exception as e:
+            logger.error(f"Failed to fetch account trade history: {e}")
+            return {"status": "error", "message": "Failed to fetch account trade history."}
 
 market_data_processor = MarketDataProcessor()

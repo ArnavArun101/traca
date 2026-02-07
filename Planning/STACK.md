@@ -1,6 +1,6 @@
 # Technology Stack: AI-Powered Trading Analyst
 
-**Project:** Traca.ai - AI Trading Analyst
+**Project:** traca - AI Trading Analyst
 **Researched:** 2026-02-07
 **Overall Confidence:** HIGH (verified with 2026 sources)
 
@@ -8,9 +8,9 @@
 
 ## Executive Summary
 
-This stack leverages Python's mature asyncio ecosystem for real-time WebSocket handling, FastAPI for production-grade API infrastructure, and open-source LLM inference via Ollama for rapid development. The frontend uses Vite + React with shadcn/ui for polished demos, while specialized libraries like pandas-ta and TanStack Query handle technical analysis and real-time state management respectively.
+This stack leverages Python's mature asyncio ecosystem for real-time WebSocket handling, FastAPI for production-grade API infrastructure, and Mistral's hosted LLM API for rapid development. The frontend uses Vite + React with shadcn/ui for polished demos, while specialized libraries like pandas-ta and TanStack Query handle technical analysis and real-time state management respectively.
 
-**Key Decision:** Ollama for LLM inference (not vLLM or llama.cpp) - optimizes for hackathon dev speed while maintaining production-grade capabilities.
+**Key Decision:** Mistral API for LLM inference (not local Ollama) - optimizes for development speed and predictable latency.
 
 **Key Decision:** Zustand over Redux for state management - minimal boilerplate, perfect for hackathon timeline with real-time WebSocket updates.
 
@@ -61,23 +61,21 @@ pip install deriv_api
 
 | Technology | Version | Purpose | Why | Confidence |
 |------------|---------|---------|-----|------------|
-| **Ollama** | Latest | Local LLM inference server | Unbeaten for ease of use and hackathon development speed. Docker-style interface: `ollama run llama3.3`. Wraps llama.cpp engine. Zero-config model management. **Not for high-concurrency production** (lacks vLLM's advanced scheduling), but perfect for demo with <10 concurrent users. | **HIGH** |
-| **Llama 3.3** | 70B (quantized 4-bit) | Base LLM for analysis | Latest Meta model with strong financial reasoning. 70B fits on consumer GPU (24GB VRAM) with 4-bit quantization. Alternative: Mistral Large 3 (24B for faster inference on 16GB VRAM). | **MEDIUM** |
+| **Mistral API** | Latest | Hosted LLM inference | Fast setup, consistent latency, strong general reasoning. Avoids local GPU setup and model management. | **HIGH** |
+| **mistral-small-latest** | Latest | Default model for analysis | Balanced quality and latency for hackathon use. | **HIGH** |
 
 **Alternative Stack (if scaling needed post-hackathon):**
 - **vLLM** (0.6+): Enterprise standard, 3.2x throughput vs Ollama, but complex setup
 - **llama.cpp-python**: Direct bindings, best CPU/GPU mixed inference
 
-**Installation:**
-```bash
-# Install Ollama
-curl -fsSL https://ollama.com/install.sh | sh
-
-# Pull model
-ollama run llama3.3:70b-instruct-q4_K_M
+**Configuration:**
+```
+MISTRAL_API_KEY=your_mistral_api_key
+MISTRAL_MODEL=mistral-small-latest
+MISTRAL_BASE_URL=https://api.mistral.ai/v1
 ```
 
-**Rationale:** Hackathon constraints favor Ollama's dev speed. Running `ollama run llama3.3` is 10x faster to set up than vLLM's complex deployment. For demos with 1-5 concurrent users, performance difference is negligible (<6% slower per user).
+**Rationale:** Hackathon constraints favor fast, reliable setup over local model tuning. Hosted inference avoids GPU setup and reduces risk of demo instability.
 
 **Source:** [vLLM vs Ollama vs llama.cpp 2026](https://blog.worldline.tech/2026/01/29/llm-inference-battle.html), [Ollama vs vLLM Performance Comparison](https://www.arsturn.com/blog/multi-gpu-showdown-benchmarking-vllm-llama-cpp-ollama-for-maximum-performance)
 

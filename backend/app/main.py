@@ -7,7 +7,7 @@ from app.db.session import create_db_and_tables
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="DerivTrader API")
+app = FastAPI(title="traca API")
 
 @app.on_event("startup")
 def on_startup():
