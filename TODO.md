@@ -78,25 +78,6 @@
 - [ ] X/Twitter OAuth integration & posting
 - [ ] Post scheduling system
 - [ ] Content calendar
-=======
-- [ ] Cost-of-emotion analysis ("FOMO cost you $X this month")
-- [ ] Win/loss pattern recognition from trade history
-- [ ] Break / limit / reflection suggestions
-- [ ] Celebration of sustainable trading habits & streaks
-- [ ] Psychology tagging system (FOMO, REVENGE, HESITATION)
-
-### Social Content & AI Personas
-- [ ] AI analyst persona definition & prompt engineering
-- [ ] Market update content generation (LinkedIn & X formats)
-- [ ] Educational thread generation
-- [ ] Daily/weekly market summary generation
-- [ ] LinkedIn OAuth integration & posting
-- [ ] X/Twitter OAuth integration & posting
-- [ ] Post scheduling system
-- [ ] Draft / approval workflow
-- [ ] Content calendar
-- [ ] Compliance & disclaimer filters
-
 
 ### Infrastructure & DevOps
 - [ ] Authentication & authorization
