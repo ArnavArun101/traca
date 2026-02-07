@@ -4,6 +4,7 @@ AI-powered trading analyst that combines real-time market intelligence, behaviou
 
 Powered by **Deriv API**, traca serves both retail and prop firm traders through a unified interface that turns complex market data into actionable understanding.
 
+MVP Link: https://frontend-adnancantfunctions-projects.vercel.app?_vercel_share=0WLCBmlikBqEotQV5J9MVCRryghRWuEK
 ---
 
 ## 🚀 Overview
