@@ -1,26 +1,14 @@
-<<<<<<< HEAD
 # Traca.ai
 
 AI-powered trading analyst that combines real-time market intelligence, behavioural coaching, and social media automation.
 
 Powered by **Deriv API**, Traca.ai serves both retail and prop firm traders through a unified interface that turns complex market data into actionable understanding.
-=======
-# traca
 
-AI-powered trading analyst that combines real-time market intelligence, behavioural coaching, and social media automation.
-
-Powered by **Deriv API**, traca serves both retail and prop firm traders through a unified interface that turns complex market data into actionable understanding.
->>>>>>> 76a861085ca3295a412df0a1c7debd59dedfbe51
-
----
 
 ## 🚀 Overview
-
-<<<<<<< HEAD
 Traca.ai is a split-view web platform featuring dashboard panels alongside a conversational AI analyst. It provides:
-=======
-traca is a split-view web platform featuring dashboard panels alongside a conversational AI analyst. It provides:
->>>>>>> 76a861085ca3295a412df0a1c7debd59dedfbe51
+
+Traca is a split-view web platform featuring dashboard panels alongside a conversational AI analyst. It provides:
 - **Instant Market Intelligence:** Plain-language explanations of price movements and technical patterns.
 - **Behavioural Coaching:** Detection of emotional or impulsive trading patterns (FOMO, revenge trading) with timely nudges.
 - **Social Automation:** Autonomous AI personas that generate and draft market updates for LinkedIn and X.
@@ -34,20 +22,16 @@ traca is a split-view web platform featuring dashboard panels alongside a conver
 - **Social Content Drafting:** Platform-appropriate content generation (Professional for LinkedIn, concise for X).
 
 ## 🏗️ Architecture
-
-<<<<<<< HEAD
 Traca.ai uses a **Modular Monolith** architecture optimized for real-time data flow and AI inference:
 
 - **Frontend:** React (Vite) + TailwindCSS + shadcn/ui + Zustand.
 - **Backend:** FastAPI (Python) + Uvicorn + WebSockets.
 - **AI Engine:** Local LLM inference via **Ollama** (Llama 3.3 / Mistral).
-=======
 traca uses a **Modular Monolith** architecture optimized for real-time data flow and AI inference:
 
 - **Frontend:** React (Vite) + TailwindCSS + shadcn/ui + Zustand.
 - **Backend:** FastAPI (Python) + Uvicorn + WebSockets.
 - **AI Engine:** Mistral API (cloud LLM).
->>>>>>> 76a861085ca3295a412df0a1c7debd59dedfbe51
 - **Data Source:** Deriv API for real-time pricing and trade history.
 - **Persistence:** SQLite for trade history, session-based chat memory, and content drafts.
 
@@ -57,11 +41,8 @@ traca uses a **Modular Monolith** architecture optimized for real-time data flow
 |-------|------------|
 | **Backend** | FastAPI, Uvicorn, websockets, deriv_api, pandas-ta |
 | **Frontend** | React 19, Vite, TanStack Query, Zustand, Recharts, Lightweight Charts |
-<<<<<<< HEAD
 | **AI/ML** | Ollama (Llama 3.3), Pydantic v2 |
-=======
 | **AI/ML** | Mistral API, Pydantic v2 |
->>>>>>> 76a861085ca3295a412df0a1c7debd59dedfbe51
 | **Styling** | TailwindCSS 4, shadcn/ui |
 
 ## 🚦 Quickstart
@@ -69,11 +50,7 @@ traca uses a **Modular Monolith** architecture optimized for real-time data flow
 ### Prerequisites
 - Python 3.11+
 - Node.js & npm
-<<<<<<< HEAD
-- [Ollama](https://ollama.com/) installed and running
-=======
 - Mistral API key
->>>>>>> 76a861085ca3295a412df0a1c7debd59dedfbe51
 - [Deriv API Token](https://api.deriv.com/)
 
 ### 1. Backend Setup
