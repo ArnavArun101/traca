@@ -1,7 +1,7 @@
 # TODO — traca
 
 Tracking completed and unfinished tasks across the project.
-*Last updated: 2026-02-07*
+*Last updated: 2026-02-07 19:47*
 
 ---
 
@@ -29,6 +29,11 @@ Tracking completed and unfinished tasks across the project.
 - [x] Pitfalls & anti-patterns (`Planning/PITFALLS.md`)
 - [x] README (`README.md`)
 
+### Frontend — Landing Page & Theme
+- [x] Landing page with hero, features, stats, how-it-works, AI chat preview, CTA, and footer (`frontend/src/components/landing/LandingPage.tsx`)
+- [x] Landing → Dashboard launch flow wired in `main.tsx`
+- [x] Theme colour updated to teal `#006994` across CSS variables and hardcoded values
+
 ---
 
 ## 🔧 In Progress
@@ -49,9 +54,11 @@ Tracking completed and unfinished tasks across the project.
 ## 📋 Not Started
 
 ### Frontend
-- [ ] React project setup
-- [ ] Split-view dashboard layout (panels + chat)
-- [ ] Chart visualization (TradingView / Recharts)
+- [x] React project setup
+- [x] Split-view dashboard layout (panels + chat)
+- [x] Chart visualization (candlestick chart component)
+- [x] Landing page with product summary & CTA
+- [x] Teal `#006994` brand theme applied to both pages
 - [ ] Rich chat responses (Markdown, inline charts, tables, sentiment gauges)
 - [ ] Responsive / mobile-friendly styling
 

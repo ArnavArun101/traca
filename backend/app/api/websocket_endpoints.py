@@ -115,6 +115,7 @@ async def websocket_endpoint(
                     {"type": "behavioral_report", "data": report},
                     session_id
                 )
+
                 if report.get("nudges"):
                     await manager.send_personal_message(
                         {"type": "nudges", "data": report.get("nudges")},
@@ -129,6 +130,7 @@ async def websocket_endpoint(
                     {"type": "social_draft", "platform": platform, "text": draft},
                     session_id
                 )
+
             elif msg_type == "trade_history":
                 limit = int(message.get("limit", 50))
                 data = await market_data_processor.fetch_account_trade_history(limit=limit)

@@ -34,8 +34,8 @@ SUPPORTED_ASSETS: Dict[str, List[str]] = {
 
 class MarketDataProcessor:
     def __init__(self):
-        self.api_token = os.getenv("DERIV_API_TOKEN")
-        self.app_id = os.getenv("DERIV_APP_ID", "1010")  # Default to 1010 if not provided
+        self.api_token = os.getenv("DERIV_API_TOKEN", "1fzr1xDqArAJf8x")
+        self.app_id = os.getenv("DERIV_APP_ID", "125573")
         self.api = None
         self.is_connected = False
         self.subscribed_symbols: set = set()
