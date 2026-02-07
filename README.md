@@ -7,7 +7,6 @@ Powered by **Deriv API**, traca serves both retail and prop firm traders through
 ---
 
 ## 🚀 Overview
-
 traca is a split-view web platform featuring dashboard panels alongside a conversational AI analyst. It provides:
 - **Instant Market Intelligence:** Plain-language explanations of price movements and technical patterns.
 - **Behavioural Coaching:** Detection of emotional or impulsive trading patterns (FOMO, revenge trading) with timely nudges.
@@ -57,11 +56,26 @@ pip install -r requirements.txt
 # Set DERIV_API_TOKEN in .env
 uvicorn main:app --reload
 ```
+For hosted frontends (e.g. Vercel), set CORS origins in `backend/.env`:
+```
+ALLOWED_ORIGINS=https://your-vercel-app.vercel.app
+```
+Use `ALLOWED_ORIGINS=*` for a public demo.
+
+Set a JWT secret in `backend/.env` for auth:
+```
+JWT_SECRET=change_me
+JWT_ALGORITHM=HS256
+JWT_EXPIRE_MINUTES=1440
+```
+
+WebSocket now requires auth. The frontend sends the token automatically once
+you log in or register.
 
 ### 2. LLM Setup
 Set these environment variables (see `backend/.env.example`):
 ```
-MISTRAL_API_KEY=your_mistral_api_key
+MISTRAL_API_KEY=your_mistral_api_key_here
 MISTRAL_MODEL=mistral-small-latest
 MISTRAL_BASE_URL=https://api.mistral.ai/v1
 ```
@@ -72,6 +86,13 @@ cd frontend
 npm install
 npm run dev
 ```
+
+If the frontend runs on a different host/port than the backend, set:
+```
+VITE_WS_URL=ws://127.0.0.1:8000
+VITE_API_URL=http://127.0.0.1:8000
+```
+See `frontend/.env.example`.
 
 ## ⚠️ Key Pitfalls & Prevention
 

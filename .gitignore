@@ -1,5 +1,9 @@
 .env
 backend/.env
+frontend/.env
 __pycache__/
 *.pyc
 backend/trading.db
+node_modules/
+frontend/node_modules/
+.idea/

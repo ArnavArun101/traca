@@ -4,6 +4,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
+function getApiBase(): string {
+  const envUrl = (import.meta.env.VITE_API_URL as string | undefined)?.trim()
+  const base = envUrl && envUrl.length > 0
+    ? envUrl
+    : `${window.location.protocol}//${window.location.hostname}:8000`
+  return base.replace(/\/$/, '')
+}
+
 interface LoginPageProps {
   onLogin: () => void
   onSwitchToRegister: () => void
@@ -12,10 +20,32 @@ interface LoginPageProps {
 export function LoginPage({ onLogin, onSwitchToRegister }: LoginPageProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    onLogin()
+    setError(null)
+    setLoading(true)
+    try {
+      const res = await fetch(`${getApiBase()}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+      const data = await res.json().catch(() => null)
+      if (!res.ok) {
+        throw new Error(data?.detail || 'Login failed')
+      }
+      if (data?.token) {
+        localStorage.setItem('traca_token', data.token)
+      }
+      onLogin()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Login failed')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -59,6 +89,11 @@ export function LoginPage({ onLogin, onSwitchToRegister }: LoginPageProps) {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
+                {error ? (
+                  <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                    {error}
+                  </div>
+                ) : null}
                 <div className="space-y-2">
                   <label className="text-sm font-medium" htmlFor="email">
                     Email
@@ -111,7 +146,7 @@ export function LoginPage({ onLogin, onSwitchToRegister }: LoginPageProps) {
                   </button>
                 </div>
 
-                <Button type="submit" className="w-full text-base py-5" size="lg">
+                <Button type="submit" className="w-full text-base py-5" size="lg" disabled={loading}>
                   Sign In
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

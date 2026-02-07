@@ -15,9 +15,15 @@ class ConnectionManager:
         self.active_connections[session_id] = websocket
         logger.info(f"New connection: {session_id}. Total connections: {len(self.active_connections)}")
 
-    def disconnect(self, session_id: str):
+    async def disconnect(self, session_id: str):
         if session_id in self.active_connections:
+            websocket = self.active_connections[session_id]
             del self.active_connections[session_id]
+            try:
+                await websocket.close()
+            except RuntimeError:
+                # Already closed by client/server
+                pass
             logger.info(f"Disconnected: {session_id}. Remaining connections: {len(self.active_connections)}")
 
     async def send_personal_message(self, message: dict, session_id: str):
@@ -36,7 +42,7 @@ class ConnectionManager:
                 logger.error(f"Unexpected error sending message to {session_id}: {e}")
                 disconnected_sessions.append(session_id)
         for session_id in disconnected_sessions:
-            self.disconnect(session_id)
+            await self.disconnect(session_id)
 
 
 manager = ConnectionManager()

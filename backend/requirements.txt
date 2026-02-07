@@ -11,3 +11,5 @@ aiohttp
 tweepy
 sqlmodel
 python-dotenv
+passlib
+python-jose[cryptography]

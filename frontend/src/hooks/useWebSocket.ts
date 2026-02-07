@@ -118,9 +118,26 @@ export function useWebSocket() {
   const connect = useCallback(() => {
     if (wsRef.current?.readyState === WebSocket.OPEN) return
 
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const host = window.location.host
-    const url = `${protocol}//${host}/ws/${sessionIdRef.current}`
+    const envUrl = (import.meta.env.VITE_WS_URL as string | undefined)?.trim()
+    let url: string
+    const token = localStorage.getItem('traca_token')
+    if (!token) {
+      setConnected(false)
+      reconnectTimer.current = setTimeout(connect, 1000)
+      return
+    }
+    const tokenQuery = token ? `?token=${encodeURIComponent(token)}` : ''
+
+    if (envUrl) {
+      let base = envUrl.replace(/\/$/, '')
+      if (base.startsWith('http://')) base = base.replace('http://', 'ws://')
+      if (base.startsWith('https://')) base = base.replace('https://', 'wss://')
+      url = `${base}/ws/${sessionIdRef.current}${tokenQuery}`
+    } else {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+      const host = window.location.host
+      url = `${protocol}//${host}/ws/${sessionIdRef.current}${tokenQuery}`
+    }
 
     const ws = new WebSocket(url)
     wsRef.current = ws

@@ -1,11 +1,13 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends
-from sqlmodel import Session
+from sqlmodel import Session, select
 from app.core.websocket_manager import manager
+from app.core.auth import authenticate_token
 from app.db.session import get_session
 from app.models.db_models import ChatHistory, Trade
 from app.services.market_data import market_data_processor
 from app.services.llm_engine import llm_engine
 from app.services.behavioral_analyzer import behavioral_analyzer
+from app.services.behavioral_coach import behavioral_coach
 from app.services.content_generator import content_generator
 from app.services.technical_indicators import technical_indicators
 from app.services.price_alerts import price_alert_service
@@ -20,14 +22,17 @@ def _parse_trades(raw_trades, session_id: str):
     trades = []
     if not raw_trades:
         return trades
-    for item in raw_trades:
+    for idx, item in enumerate(raw_trades, start=1):
         try:
+            trade_id = item.get("id") if item.get("id") is not None else idx
             trades.append(
                 Trade(
+                    id=trade_id,
                     symbol=item.get("symbol", "UNKNOWN"),
                     price=float(item.get("price", 0)),
                     action=item.get("action", "buy"),
                     amount=float(item.get("amount", 0)),
+                    pnl=float(item.get("pnl", item.get("profit"))) if item.get("pnl", item.get("profit")) is not None else None,
                     timestamp=int(item.get("timestamp", 0)),
                     session_id=session_id,
                 )
@@ -42,11 +47,39 @@ async def websocket_endpoint(
     session_id: str,
     session: Session = Depends(get_session),
 ):
+    token = websocket.query_params.get("token")
+    if not token:
+        await websocket.accept()
+        await websocket.send_json({"type": "error", "message": "Authentication required."})
+        await websocket.close(code=1008)
+        return
+    try:
+        authenticate_token(token, session)
+    except Exception:
+        await websocket.accept()
+        await websocket.send_json({"type": "error", "message": "Invalid or expired token."})
+        await websocket.close(code=1008)
+        return
+
     await manager.connect(websocket, session_id)
     try:
         while True:
             data = await websocket.receive_text()
-            message = json.loads(data)
+            try:
+                message = json.loads(data)
+            except json.JSONDecodeError:
+                await manager.send_personal_message(
+                    {"type": "error", "message": "Invalid JSON format"},
+                    session_id,
+                )
+                continue
+
+            if not isinstance(message, dict) or "type" not in message:
+                await manager.send_personal_message(
+                    {"type": "error", "message": "Invalid message format"},
+                    session_id,
+                )
+                continue
             
             msg_type = message.get("type")
             
@@ -95,9 +128,19 @@ async def websocket_endpoint(
                     ChatHistory(session_id=session_id, role="user", content=user_msg)
                 )
                 session.commit()
-                # Aggregate context (market, behavioral)
-                # For now, just call LLM
-                analysis = await llm_engine.analyze_market({"note": "User asked: " + user_msg})
+                recent_chats = session.exec(
+                    select(ChatHistory)
+                    .where(ChatHistory.session_id == session_id)
+                    .order_by(ChatHistory.timestamp.desc())
+                    .limit(10)
+                ).all()
+                history = [
+                    {"role": c.role, "content": c.content}
+                    for c in reversed(recent_chats)
+                ]
+                analysis = await llm_engine.analyze_market(
+                    {"note": "User asked: " + user_msg, "chat_history": history}
+                )
                 session.add(
                     ChatHistory(session_id=session_id, role="assistant", content=analysis)
                 )
@@ -110,15 +153,19 @@ async def websocket_endpoint(
             elif msg_type == "analyze_behavior":
                 raw_trades = message.get("trades", [])
                 trades = _parse_trades(raw_trades, session_id)
-                report = behavioral_analyzer.analyze_trades(trades)
+                report = behavioral_analyzer.analyze_trades(trades, session_id=session_id)
                 await manager.send_personal_message(
                     {"type": "behavioral_report", "data": report},
                     session_id
                 )
 
-                if report.get("nudges"):
+                if trades:
+                    nudges = behavioral_coach.evaluate_trade(trades[-1], trades[:-1], session_id)
+                else:
+                    nudges = []
+                if nudges:
                     await manager.send_personal_message(
-                        {"type": "nudges", "data": report.get("nudges")},
+                        {"type": "nudges", "data": [n.to_dict() for n in nudges]},
                         session_id
                     )
 
@@ -153,9 +200,13 @@ async def websocket_endpoint(
                 raw_trades.append(message.get("trade", {}))
                 trades = _parse_trades(raw_trades, session_id)
                 report = behavioral_analyzer.analyze_trades(trades)
-                if report.get("nudges"):
+                if trades:
+                    nudges = behavioral_coach.evaluate_trade(trades[-1], trades[:-1], session_id)
+                else:
+                    nudges = []
+                if nudges:
                     await manager.send_personal_message(
-                        {"type": "nudges", "data": report.get("nudges")},
+                        {"type": "nudges", "data": [n.to_dict() for n in nudges]},
                         session_id
                     )
 
@@ -270,7 +321,7 @@ async def websocket_endpoint(
                 )
 
     except WebSocketDisconnect:
-        manager.disconnect(session_id)
+        await manager.disconnect(session_id)
     except Exception as e:
         logger.error(f"WebSocket error in {session_id}: {e}")
-        manager.disconnect(session_id)
+        await manager.disconnect(session_id)

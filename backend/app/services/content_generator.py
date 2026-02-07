@@ -1,9 +1,9 @@
 import logging
-import os
 from typing import Optional, Dict
 from app.services.llm_engine import llm_engine
 
 logger = logging.getLogger(__name__)
+
 
 class ContentGenerator:
     def __init__(self):
@@ -46,9 +46,9 @@ class ContentGenerator:
             f"Do not provide financial advice or buy/sell signals. "
             f"Include a short compliance line: '{self.compliance_footer}'."
         )
-        
+
         prompt = f"Topic: {topic}\n\nDraft a post."
-        
+
         result = await llm_engine.generate_response(prompt, system_prompt=system_prompt)
         response_text = result.get("response", "Could not generate post draft.")
         if platform == "x":

@@ -4,6 +4,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
+function getApiBase(): string {
+  const envUrl = (import.meta.env.VITE_API_URL as string | undefined)?.trim()
+  const base = envUrl && envUrl.length > 0
+    ? envUrl
+    : `${window.location.protocol}//${window.location.hostname}:8000`
+  return base.replace(/\/$/, '')
+}
+
 interface RegisterPageProps {
   onRegister: () => void
   onSwitchToLogin: () => void
@@ -14,10 +22,41 @@ export function RegisterPage({ onRegister, onSwitchToLogin }: RegisterPageProps)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    onRegister()
+    setError(null)
+    if (password !== confirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
+    setLoading(true)
+    try {
+      const res = await fetch(`${getApiBase()}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          confirm_password: confirmPassword,
+        }),
+      })
+      const data = await res.json().catch(() => null)
+      if (!res.ok) {
+        throw new Error(data?.detail || 'Registration failed')
+      }
+      if (data?.token) {
+        localStorage.setItem('traca_token', data.token)
+      }
+      onRegister()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Registration failed')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -61,6 +100,11 @@ export function RegisterPage({ onRegister, onSwitchToLogin }: RegisterPageProps)
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
+                {error ? (
+                  <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                    {error}
+                  </div>
+                ) : null}
                 <div className="space-y-2">
                   <label className="text-sm font-medium" htmlFor="name">
                     Full Name
@@ -151,7 +195,7 @@ export function RegisterPage({ onRegister, onSwitchToLogin }: RegisterPageProps)
                   </span>
                 </label>
 
-                <Button type="submit" className="w-full text-base py-5" size="lg">
+                <Button type="submit" className="w-full text-base py-5" size="lg" disabled={loading}>
                   Create Account
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

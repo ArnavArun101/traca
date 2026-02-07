@@ -34,8 +34,8 @@ SUPPORTED_ASSETS: Dict[str, List[str]] = {
 
 class MarketDataProcessor:
     def __init__(self):
-        self.api_token = os.getenv("DERIV_API_TOKEN", "1fzr1xDqArAJf8x")
-        self.app_id = os.getenv("DERIV_APP_ID", "125573")
+        self.api_token = os.getenv("DERIV_API_TOKEN")
+        self.app_id = os.getenv("DERIV_APP_ID", "1010")
         self.api = None
         self.is_connected = False
         self.subscribed_symbols: set = set()
@@ -60,7 +60,6 @@ class MarketDataProcessor:
         except Exception as e:
             logger.error(f"Failed to initialize Deriv: {e}")
             self.is_connected = False
-
     def _start_keepalive(self):
         if self.keepalive_task and not self.keepalive_task.done():
             return
@@ -87,7 +86,6 @@ class MarketDataProcessor:
         self.subscribed_symbols.clear()
         for symbol in symbols:
             await self.subscribe_ticks(symbol)
-
     async def _handle_tick(self, data):
         """Handle incoming tick data from Deriv subscription."""
         if 'tick' in data:
@@ -276,6 +274,7 @@ class MarketDataProcessor:
                         "transaction_id": tx.get("transaction_id"),
                         "symbol": tx.get("symbol"),
                         "amount": float(tx.get("amount", 0)) if tx.get("amount") is not None else None,
+                        "pnl": float(tx.get("profit", 0)) if tx.get("profit") is not None else None,
                         "balance": float(tx.get("balance", 0)) if tx.get("balance") is not None else None,
                         "transaction_time": tx.get("transaction_time"),
                         "action_type": tx.get("action_type"),

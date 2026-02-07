@@ -8,6 +8,7 @@ class Trade(SQLModel, table=True):
     price: float
     action: str  # buy/sell
     amount: float
+    pnl: Optional[float] = Field(default=None)
     timestamp: int = Field(default_factory=lambda: int(time.time()))
     session_id: str
 
@@ -36,3 +37,10 @@ class PriceAlert(SQLModel, table=True):
     is_active: bool = Field(default=True)
     created_at: int = Field(default_factory=lambda: int(time.time()))
     triggered_at: Optional[int] = Field(default=None)
+
+class User(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str
+    email: str = Field(index=True, unique=True)
+    hashed_password: str
+    created_at: int = Field(default_factory=lambda: int(time.time()))
