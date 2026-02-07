@@ -38,18 +38,6 @@
 - [x] Discipline scoring system (% trades following user-defined rules)
 - [x] Real-time nudge delivery through WebSocket
 =======
-- ✅ Wire LLM engine to an actual open-source model (Llama/Mistral)
-- ✅ Flesh out content generator beyond stub
-- ✅ Add trade history import from Deriv API
-- ✅ Persist chat history to DB in WebSocket flow
-
-### Backend — Behavioral Coaching
-- ✅ Expand behavioral patterns beyond position-size & rapid-entry detection
-- ✅ Discipline scoring system (% trades following user-defined rules)
-- ✅ Real-time nudge delivery through WebSocket
->>>>>>> 76a861085ca3295a412df0a1c7debd59dedfbe51
-
----
 
 ## 📋 Not Started
 
@@ -108,7 +96,7 @@
 - [ ] Draft / approval workflow
 - [ ] Content calendar
 - [ ] Compliance & disclaimer filters
->>>>>>> 76a861085ca3295a412df0a1c7debd59dedfbe51
+
 
 ### Infrastructure & DevOps
 - [ ] Authentication & authorization
