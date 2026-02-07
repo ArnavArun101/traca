@@ -1,10 +1,3 @@
-# TODO — traca
-
-Tracking completed and unfinished tasks across the project.
-*Last updated: 2026-02-07 19:47*
-
----
-
 ## ✅ Completed
 
 ### Backend Scaffolding
@@ -29,36 +22,29 @@ Tracking completed and unfinished tasks across the project.
 - [x] Pitfalls & anti-patterns (`Planning/PITFALLS.md`)
 - [x] README (`README.md`)
 
-### Frontend — Landing Page & Theme
-- [x] Landing page with hero, features, stats, how-it-works, AI chat preview, CTA, and footer (`frontend/src/components/landing/LandingPage.tsx`)
-- [x] Landing → Dashboard launch flow wired in `main.tsx`
-- [x] Theme colour updated to teal `#006994` across CSS variables and hardcoded values
-
 ---
 
 ## 🔧 In Progress
 
 ### Backend — Core Services
-- ✅ Wire LLM engine to an actual open-source model (Llama/Mistral)
-- ✅ Flesh out content generator beyond stub
-- ✅ Add trade history import from Deriv API
-- ✅ Persist chat history to DB in WebSocket flow
+<<<<<<< HEAD
+- [ ] Wire LLM engine to an actual open-source model (Llama/Mistral)
+- [ ] Flesh out content generator beyond stub
+- [ ] Add trade history import from Deriv API
+- [ ] Persist chat history to DB in WebSocket flow
 
 ### Backend — Behavioral Coaching
-- ✅ Expand behavioral patterns beyond position-size & rapid-entry detection
-- ✅ Discipline scoring system (% trades following user-defined rules)
-- ✅ Real-time nudge delivery through WebSocket
-
----
+- [x] Expand behavioral patterns beyond position-size & rapid-entry detection
+- [x] Discipline scoring system (% trades following user-defined rules)
+- [x] Real-time nudge delivery through WebSocket
+=======
 
 ## 📋 Not Started
 
 ### Frontend
-- [x] React project setup
-- [x] Split-view dashboard layout (panels + chat)
-- [x] Chart visualization (candlestick chart component)
-- [x] Landing page with product summary & CTA
-- [x] Teal `#006994` brand theme applied to both pages
+- [ ] React project setup
+- [ ] Split-view dashboard layout (panels + chat)
+- [ ] Chart visualization (TradingView / Recharts)
 - [ ] Rich chat responses (Markdown, inline charts, tables, sentiment gauges)
 - [ ] Responsive / mobile-friendly styling
 
@@ -72,23 +58,26 @@ Tracking completed and unfinished tasks across the project.
 - [x] News & event summarisation per instrument
 
 ### Behavioral Coaching
-- [ ] Cost-of-emotion analysis ("FOMO cost you $X this month")
-- [ ] Win/loss pattern recognition from trade history
-- [ ] Break / limit / reflection suggestions
-- [ ] Celebration of sustainable trading habits & streaks
-- [ ] Psychology tagging system (FOMO, REVENGE, HESITATION)
+<<<<<<< HEAD
+- [x] Cost-of-emotion analysis ("FOMO cost you $X this month")
+- [x] Win/loss pattern recognition from trade history
+- [x] Break / limit / reflection suggestions
+- [x] Celebration of sustainable trading habits & streaks
+- [x] Psychology tagging system (FOMO, REVENGE, HESITATION)
+- [x] Real-time nudge delivery through WebSocket
+- [x] Discipline scoring system (% trades following user-defined rules)
 
 ### Social Content & AI Personas
-- [ ] AI analyst persona definition & prompt engineering
-- [ ] Market update content generation (LinkedIn & X formats)
-- [ ] Educational thread generation
-- [ ] Daily/weekly market summary generation
+- [x] AI analyst persona definition & prompt engineering
+- [x] Market update content generation (LinkedIn & X formats)
+- [x] Educational thread generation
+- [x] Daily/weekly market summary generation
+- [x] Draft / approval workflow
+- [x] Compliance & disclaimer filters
 - [ ] LinkedIn OAuth integration & posting
 - [ ] X/Twitter OAuth integration & posting
 - [ ] Post scheduling system
-- [ ] Draft / approval workflow
 - [ ] Content calendar
-- [ ] Compliance & disclaimer filters
 
 ### Infrastructure & DevOps
 - [ ] Authentication & authorization
