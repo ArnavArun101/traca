@@ -1,3 +1,10 @@
+# TODO — DerivTrader
+
+Tracking completed and unfinished tasks across the project.
+*Last updated: 2026-02-07*
+
+---
+
 ## ✅ Completed
 
 ### Backend Scaffolding
@@ -27,17 +34,17 @@
 ## 🔧 In Progress
 
 ### Backend — Core Services
-<<<<<<< HEAD
 - [ ] Wire LLM engine to an actual open-source model (Llama/Mistral)
 - [ ] Flesh out content generator beyond stub
 - [ ] Add trade history import from Deriv API
 - [ ] Persist chat history to DB in WebSocket flow
 
 ### Backend — Behavioral Coaching
-- [x] Expand behavioral patterns beyond position-size & rapid-entry detection
-- [x] Discipline scoring system (% trades following user-defined rules)
-- [x] Real-time nudge delivery through WebSocket
-=======
+- [ ] Expand behavioral patterns beyond position-size & rapid-entry detection
+- [ ] Discipline scoring system (% trades following user-defined rules)
+- [ ] Real-time nudge delivery through WebSocket
+
+---
 
 ## 📋 Not Started
 
@@ -49,35 +56,32 @@
 - [ ] Responsive / mobile-friendly styling
 
 ### Market Analysis
-- [x] Real-time price streaming via Deriv WebSocket API
-- [x] Basic technical indicators (RSI, MACD, moving averages)
-- [x] Price alerts & notifications
-- [x] Historical data storage & retrieval
-- [x] Multi-asset support (forex, crypto, synthetic indices)
-- [x] Plain-language market explanations ("Why did EUR/USD spike?")
-- [x] News & event summarisation per instrument
+- [ ] Real-time price streaming via Deriv WebSocket API
+- [ ] Basic technical indicators (RSI, MACD, moving averages)
+- [ ] Price alerts & notifications
+- [ ] Historical data storage & retrieval
+- [ ] Multi-asset support (forex, crypto, synthetic indices)
+- [ ] Plain-language market explanations ("Why did EUR/USD spike?")
+- [ ] News & event summarisation per instrument
 
 ### Behavioral Coaching
-<<<<<<< HEAD
-- [x] Cost-of-emotion analysis ("FOMO cost you $X this month")
-- [x] Win/loss pattern recognition from trade history
-- [x] Break / limit / reflection suggestions
-- [x] Celebration of sustainable trading habits & streaks
-- [x] Psychology tagging system (FOMO, REVENGE, HESITATION)
-- [x] Real-time nudge delivery through WebSocket
-- [x] Discipline scoring system (% trades following user-defined rules)
+- [ ] Cost-of-emotion analysis ("FOMO cost you $X this month")
+- [ ] Win/loss pattern recognition from trade history
+- [ ] Break / limit / reflection suggestions
+- [ ] Celebration of sustainable trading habits & streaks
+- [ ] Psychology tagging system (FOMO, REVENGE, HESITATION)
 
 ### Social Content & AI Personas
-- [x] AI analyst persona definition & prompt engineering
-- [x] Market update content generation (LinkedIn & X formats)
-- [x] Educational thread generation
-- [x] Daily/weekly market summary generation
-- [x] Draft / approval workflow
-- [x] Compliance & disclaimer filters
+- [ ] AI analyst persona definition & prompt engineering
+- [ ] Market update content generation (LinkedIn & X formats)
+- [ ] Educational thread generation
+- [ ] Daily/weekly market summary generation
 - [ ] LinkedIn OAuth integration & posting
 - [ ] X/Twitter OAuth integration & posting
 - [ ] Post scheduling system
+- [ ] Draft / approval workflow
 - [ ] Content calendar
+- [ ] Compliance & disclaimer filters
 
 ### Infrastructure & DevOps
 - [ ] Authentication & authorization
