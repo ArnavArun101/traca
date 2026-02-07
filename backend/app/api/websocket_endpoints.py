@@ -1,13 +1,10 @@
-<<<<<<< HEAD
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from app.core.websocket_manager import manager
-=======
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends
 from sqlmodel import Session
 from app.core.websocket_manager import manager
 from app.db.session import get_session
 from app.models.db_models import ChatHistory, Trade
->>>>>>> 76a861085ca3295a412df0a1c7debd59dedfbe51
 from app.services.market_data import market_data_processor
 from app.services.llm_engine import llm_engine
 from app.services.behavioral_analyzer import behavioral_analyzer
@@ -21,10 +18,8 @@ import json
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
-<<<<<<< HEAD
 @router.websocket("/ws/{session_id}")
 async def websocket_endpoint(websocket: WebSocket, session_id: str):
-=======
 def _parse_trades(raw_trades, session_id: str):
     trades = []
     if not raw_trades:
@@ -51,7 +46,6 @@ async def websocket_endpoint(
     session_id: str,
     session: Session = Depends(get_session),
 ):
->>>>>>> 76a861085ca3295a412df0a1c7debd59dedfbe51
     await manager.connect(websocket, session_id)
     try:
         while True:
@@ -95,11 +89,9 @@ async def websocket_endpoint(
             
             elif msg_type == "chat":
                 user_msg = message.get("message")
-<<<<<<< HEAD
                 # Aggregate context (market, behavioral)
                 # For now, just call LLM
                 analysis = await llm_engine.analyze_market({"note": "User asked: " + user_msg})
-=======
                 if not user_msg:
                     await manager.send_personal_message(
                         {"type": "error", "message": "Missing chat message"},
@@ -117,33 +109,27 @@ async def websocket_endpoint(
                     ChatHistory(session_id=session_id, role="assistant", content=analysis)
                 )
                 session.commit()
->>>>>>> 76a861085ca3295a412df0a1c7debd59dedfbe51
                 await manager.send_personal_message(
                     {"type": "chat_response", "text": analysis},
                     session_id
                 )
             
             elif msg_type == "analyze_behavior":
-<<<<<<< HEAD
                 # Mock analysis for now
                 report = behavioral_analyzer.analyze_trades([])
-=======
                 raw_trades = message.get("trades", [])
                 trades = _parse_trades(raw_trades, session_id)
                 report = behavioral_analyzer.analyze_trades(trades)
->>>>>>> 76a861085ca3295a412df0a1c7debd59dedfbe51
                 await manager.send_personal_message(
                     {"type": "behavioral_report", "data": report},
                     session_id
                 )
-<<<<<<< HEAD
-=======
+
                 if report.get("nudges"):
                     await manager.send_personal_message(
                         {"type": "nudges", "data": report.get("nudges")},
                         session_id
                     )
->>>>>>> 76a861085ca3295a412df0a1c7debd59dedfbe51
 
             elif msg_type == "generate_social":
                 topic = message.get("topic", "Market update")
@@ -153,8 +139,7 @@ async def websocket_endpoint(
                     {"type": "social_draft", "platform": platform, "text": draft},
                     session_id
                 )
-<<<<<<< HEAD
-=======
+
             elif msg_type == "trade_history":
                 limit = int(message.get("limit", 50))
                 data = await market_data_processor.fetch_account_trade_history(limit=limit)
@@ -182,7 +167,6 @@ async def websocket_endpoint(
                         {"type": "nudges", "data": report.get("nudges")},
                         session_id
                     )
->>>>>>> 76a861085ca3295a412df0a1c7debd59dedfbe51
 
             # -- Market Analysis: Technical Indicators -------------------------
 
