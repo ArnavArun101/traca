@@ -8,26 +8,29 @@
 
 Mistakes that cause rewrites, demo failures, or major technical debt.
 
-### Pitfall 1: Deriv API Rate Limiting
+### Pitfall 1: Deriv WebSocket Connection Death Spiral
 
-**What goes wrong:** Deriv API free tier has strict rate limits (e.g., 5 requests per minute). Rapidly polling for price updates or historical data triggers 429 errors, breaking the market data feed.
+**What goes wrong:** WebSocket connections silently timeout after 2 minutes of inactivity, breaking the real-time data feed. Teams discover this during demos when the connection drops mid-presentation.
 
-**Why it happens:** Teams implement aggressive polling to simulate real-time data without considering API constraints.
+**Why it happens:** Deriv API requires periodic keep-alive messages (ping or time requests every 30 seconds), but teams assume WebSocket connections stay open indefinitely. No visible errors until the connection closes.
 
 **Consequences:**
-- Market data feed stops working mid-demo
-- 429 error responses are not handled, causing app crashes
-- Users see stale data
+- Demo fails when connection drops during presentation
+- Users see stale data without realizing it
+- Reconnection attempts fail because closed WebSocket instances cannot be reused
+- Must create new WebSocket instance, losing all subscriptions
 
 **Prevention:**
-- Implement throttling/debouncing in the `MarketDataProcessor`
-- Use a polling interval that respects the 5 requests/min limit (e.g., every 12-15 seconds per symbol)
-- Implement graceful error handling for 429 status codes
-- Cache historical data to avoid redundant API calls
+- Implement `setInterval` with 30-second ping requests immediately after connection
+- Subscribe to real data streams (not just ping) to keep connection engaged
+- Implement proper OnClose/OnError handlers that log disconnections
+- Create reconnection logic that instantiates new WebSocket (never reuse closed instances)
+- Test inactivity scenarios explicitly (let app sit idle for 5+ minutes)
 
 **Detection:**
-- Check logs for "429 Too Many Requests"
-- Monitor API call frequency during development
+- Warning signs: Connection works initially, then mysteriously stops after idle period
+- Check server logs for session timeout messages
+- Monitor readyState transitions (1 = open, 2 = closing, 3 = closed)
 
 **Phase mapping:** Phase 1 (MVP Backend) - Must be solved before Phase 2 integration
 
@@ -112,7 +115,7 @@ Mistakes that cause rewrites, demo failures, or major technical debt.
 
 ### Pitfall 4: React Context Re-render Storm with Real-Time Data
 
-**What goes wrong:** Every market price update triggers full app re-render. UI becomes laggy/unresponsive. Browser freezes with 10+ active subscriptions. Demo appears broken during live market hours.
+**What goes wrong:** Every Deriv WebSocket price tick triggers full app re-render. UI becomes laggy/unresponsive. Browser freezes with 10+ active subscriptions. Demo appears broken during live market hours.
 
 **Why it happens:**
 - Real-time market data updates at high frequency (multiple times per second)
@@ -149,7 +152,7 @@ Mistakes that cause rewrites, demo failures, or major technical debt.
 
 ### Pitfall 5: Demo Works Perfectly Outside Market Hours
 
-**What goes wrong:** Team builds and tests during nights/weekends when markets are closed. Demo during hackathon judging (market hours) reveals critical bugs: rate limits exceeded, UI can't handle data volume.
+**What goes wrong:** Team builds and tests during nights/weekends when Deriv markets are closed. Demo during hackathon judging (market hours) reveals critical bugs: connection limits hit, rate limits exceeded, UI can't handle live data volume.
 
 **Why it happens:**
 - Mock/test data is sanitized and predictable
@@ -167,8 +170,8 @@ Mistakes that cause rewrites, demo failures, or major technical debt.
 - **Test during live market hours explicitly** - At least 3 full test runs during active trading
 - Record live market data for offline replay:
   ```python
-  # Capture real API stream
-  # Replay for stress testing
+  # Capture real WebSocket stream
+  # Replay at 2-10x speed for stress testing
   ```
 - Test scenarios:
   - Market open (high volatility surge)
@@ -210,7 +213,7 @@ Mistakes that cause rewrites, demo failures, or major technical debt.
 - **Allocate first 5 hours to planning what MUST work for demo** (not nice-to-haves)
 - Define "demo script" on day 1:
   ```
-  1. Show real-time market data feed (30 sec)
+  1. Show real-time Deriv price feed (30 sec)
   2. AI analyzes user's trading pattern (30 sec)
   3. Generate one LinkedIn post (30 sec)
   Total: 90 seconds of working features
@@ -280,7 +283,7 @@ Mistakes that cause delays, technical debt, or reduced functionality.
 **Why it happens:**
 - Building behavioral analysis before data collection
 - No seeding strategy for new users
-- Assuming users have trading history
+- Assuming users have Deriv trading history
 
 **Prevention:**
 - Implement 3-tier user experience:
@@ -288,7 +291,7 @@ Mistakes that cause delays, technical debt, or reduced functionality.
   2. **Light users (1-10 trades):** Basic pattern detection + "Trade more to improve accuracy"
   3. **Active users (10+ trades):** Full behavioral analysis
 - For demo: Pre-seed test account with realistic trading history
-- Offer to analyze historical trades
+- Offer to analyze Deriv API historical trades (if API permits)
 - Provide "Sample Analysis" using anonymized data from typical trader
 
 **Detection:**
@@ -392,7 +395,7 @@ Mistakes that cause delays, technical debt, or reduced functionality.
   - ✅ "Historical patterns show..."
 - Document in presentation: "This is a behavioral analysis tool, not a trading recommendation system"
 - Keep human in loop: "Here's what AI thinks - you decide"
-- Check hackathon rules for compliance requirements
+- Check Deriv hackathon rules for compliance requirements
 
 **Detection:**
 - Warning signs: App makes specific trade recommendations
@@ -447,7 +450,7 @@ Mistakes that cause annoyance but are quickly fixable.
 - Not capturing real market messiness
 
 **Prevention:**
-- Use actual historical data for mocks
+- Use actual Deriv historical data for mocks
 - Include edge cases:
   - Flat/sideways markets (no trend)
   - Sudden reversals
@@ -529,7 +532,7 @@ Mistakes that cause annoyance but are quickly fixable.
 |-------------|---------------|------------|
 | Phase 1: MVP Backend | LLM hallucinations on financial data | Use LLM for narrative only, parse numbers programmatically |
 | Phase 1: MVP Backend | Self-hosted LLM too slow for demo | Use hosted API (OpenRouter, Groq) for speed |
-| Phase 2: Real-time Data | Deriv API constraints | Implement polling interval logic |
+| Phase 2: Real-time Data | Deriv WebSocket timeout after 2min | Implement 30-second ping interval immediately |
 | Phase 2: Real-time Data | Memory leaks from WebSocket connections | Add heartbeat mechanism, aggressively close ghost connections |
 | Phase 2: Real-time Data | Only testing outside market hours | Schedule 3+ test sessions during live trading |
 | Phase 3: Frontend Dev | Context re-render storm with real-time data | Use Zustand/Jotai for WebSocket state, not Context |
@@ -589,7 +592,9 @@ Mistakes that cause annoyance but are quickly fixable.
 ## Sources
 
 **Deriv API Integration:**
-- [Deriv API Documentation](https://api.deriv.com/)
+- [Deriv WebSocket API Documentation](https://developers.deriv.com/docs/websockets)
+- [Keep Connection Live - Deriv API](https://developers.deriv.com/docs/keep-connection-live)
+- [Deriv API GitHub](https://github.com/deriv-com/deriv-api)
 
 **LLM Deployment & Hallucinations:**
 - [Best Open Source LLMs 2026 - Contabo](https://contabo.com/blog/open-source-llms/)
@@ -646,7 +651,7 @@ Mistakes that cause annoyance but are quickly fixable.
 
 | Category | Level | Notes |
 |----------|-------|-------|
-| Deriv API | HIGH | Official documentation verified, specific technical requirements clear |
+| Deriv WebSocket API | HIGH | Official documentation verified, specific technical requirements clear |
 | LLM Hallucinations | HIGH | Multiple academic sources + real-world failure rates documented |
 | FastAPI/WebSocket Memory | HIGH | GitHub issues with production examples, verified solutions |
 | React State Management | HIGH | Current 2026 best practices from authoritative sources |

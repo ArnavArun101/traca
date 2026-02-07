@@ -1,6 +1,6 @@
 # Technology Stack: AI-Powered Trading Analyst
 
-**Project:** Traca.ai - AI Trading Analyst
+**Project:** DerivTrader - AI Trading Analyst for Deriv Hackathon
 **Researched:** 2026-02-07
 **Overall Confidence:** HIGH (verified with 2026 sources)
 
@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-This stack leverages Python's mature asyncio ecosystem for real-time WebSocket handling, FastAPI for production-grade API infrastructure, and open-source LLM inference via Ollama for rapid development. The frontend uses Vite + React with shadcn/ui for polished demos, while specialized libraries like pandas-ta and TanStack Query handle technical analysis and real-time state management respectively.
+This stack leverages Python's mature asyncio ecosystem for real-time WebSocket handling, FastAPI for production-grade API infrastructure, and open-source LLM inference via Ollama for rapid development. The frontend uses Vite + React with shadcn/ui for polished hackathon demos, while specialized libraries like pandas-ta and TanStack Query handle technical analysis and real-time state management respectively.
 
 **Key Decision:** Ollama for LLM inference (not vLLM or llama.cpp) - optimizes for hackathon dev speed while maintaining production-grade capabilities.
 
@@ -39,11 +39,11 @@ This stack leverages Python's mature asyncio ecosystem for real-time WebSocket h
 
 | Library | Version | Purpose | Why | Confidence |
 |---------|---------|---------|-----|------------|
-| **deriv_api** | Latest | Deriv API wrapper | Official Python library for Deriv. | **HIGH** |
+| **python-deriv-api** | 0.1.6 | Deriv WebSocket API wrapper | Official Deriv library. Handles authentication, subscriptions (via rxpy), and connection management. Supports auto-reconnect. | **HIGH** |
 
 **Installation:**
 ```bash
-pip install deriv_api
+pip install python-deriv-api
 ```
 
 **Critical Notes:**
@@ -51,9 +51,9 @@ pip install deriv_api
 - Requires Python >=3.9.6
 - Uses rxpy for subscription streams (reactive programming model)
 
-**Rationale:** Official library with proven integration.
+**Rationale:** Official library with proven integration. The rxpy subscription model aligns well with real-time trading data streams.
 
-**Source:** [Deriv API Docs](https://api.deriv.com/)
+**Source:** [python-deriv-api GitHub](https://github.com/deriv-com/python-deriv-api), [Deriv API WebSocket Docs](https://developers.deriv.com/docs/websockets)
 
 ---
 
@@ -92,7 +92,7 @@ ollama run llama3.3:70b-instruct-q4_K_M
 | **ChromaDB** | 0.6+ | Vector database | For <200k vectors (historical trades). Easier than FAISS, persistent storage, metadata filtering. Use FAISS if >200k vectors. | **MEDIUM** |
 
 **When NOT to use:**
-- Skip RAG entirely if LLM context window (128k tokens for Llama 3.3) is sufficient for history
+- Skip RAG entirely if LLM context window (128k tokens for Llama 3.3) is sufficient for trade history
 - Avoid LangChain - overkill for this use case, LlamaIndex is simpler for data retrieval
 
 **Rationale:** RAG is optional. Modern LLMs have 128k+ context windows (enough for ~50-100 trades). Only add RAG if you need semantic search over thousands of historical trades.
@@ -173,7 +173,7 @@ async def health_check():
 
 **Rationale:** Gunicorn + Uvicorn workers is 2026 industry standard for FastAPI production. Docker enables easy deployment to AWS/GCP/DigitalOcean.
 
-**Source:** [FastAPI Production Best Practices 2026](https://www.zestminds.com/blog/fastapi-production-deployment-best-practices), [Render FastAPI Deployment Guide](https://render.com/articles/fastapi-production-deployment-best-practices)
+**Source:** [FastAPI Production Best Practices 2026](https://www.zestminds.com/blog/fastapi-deployment-guide/), [Render FastAPI Deployment Guide](https://render.com/articles/fastapi-production-deployment-best-practices)
 
 ---
 
@@ -322,7 +322,8 @@ npm install recharts lightweight-charts
 models/
 
 # Deriv API credentials
-DERIV_API_TOKEN=your_key
+deriv_config.json
+api_tokens.txt
 ```
 
 ---
@@ -354,7 +355,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install fastapi[standard]==0.128.4 uvicorn[standard] websockets==16.0 \
-            deriv_api pandas-ta pandas numpy \
+            python-deriv-api==0.1.6 pandas-ta pandas numpy \
             pydantic==2.12+ aiohttp tweepy
 
 # Install Ollama (separate install)
@@ -385,7 +386,9 @@ npx shadcn@latest add button card chart dialog input label select
 ### `.env` (Backend)
 ```bash
 # Deriv API
-DERIV_API_TOKEN=your_deriv_api_api_key
+DERIV_APP_ID=your_app_id
+DERIV_API_TOKEN=your_api_token
+DERIV_ENDPOINT=wss://ws.derivws.com/websockets/v3
 
 # LLM
 OLLAMA_HOST=http://localhost:11434
@@ -421,7 +424,7 @@ export default defineConfig({
 | Area | Confidence | Rationale |
 |------|------------|-----------|
 | **Backend Framework** | **HIGH** | FastAPI + Uvicorn is industry standard. Verified with 2026 sources. |
-| **WebSocket Handling** | **HIGH** | websockets library is battle-tested.
+| **WebSocket Handling** | **HIGH** | websockets library is battle-tested. Deriv official library reduces integration risk. |
 | **LLM Inference** | **HIGH** | Ollama is proven for dev/demo environments. Verified performance benchmarks. |
 | **Technical Analysis** | **HIGH** | pandas-ta is widely adopted. Clear tradeoff vs TA-Lib documented. |
 | **Frontend Framework** | **HIGH** | Vite is officially recommended by React team. shadcn/ui gaining rapid adoption. |
@@ -436,7 +439,7 @@ export default defineConfig({
 ### Backend
 - [FastAPI Production Best Practices 2026](https://fastlaunchapi.dev/blog/fastapi-best-practices-production-2026) - **MEDIUM** confidence (blog post, but recent)
 - [Python WebSocket Libraries Comparison](https://superfastpython.com/asyncio-websocket-clients/) - **HIGH** confidence (authoritative source)
-- [Deriv API Documentation](https://api.deriv.com/) - **HIGH** confidence (official)
+- [Deriv API Documentation](https://developers.deriv.com/docs/websockets) - **HIGH** confidence (official)
 - [vLLM vs Ollama Performance 2026](https://blog.worldline.tech/2026/01/29/llm-inference-battle.html) - **HIGH** confidence (recent benchmarks)
 - [pandas-ta vs TA-Lib](https://www.slingacademy.com/article/comparing-ta-lib-to-pandas-ta-which-one-to-choose/) - **MEDIUM** confidence (tutorial site)
 - [FastAPI PyPI](https://pypi.org/project/fastapi/) - **HIGH** confidence (official)
@@ -472,7 +475,7 @@ export default defineConfig({
 ## Recommended Exploration Path
 
 **Week 1:** Backend foundation
-- FastAPI + Deriv integration
+- FastAPI + Deriv WebSocket integration
 - Ollama + Llama 3.3 setup
 - Basic technical analysis with pandas-ta
 

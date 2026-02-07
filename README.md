@@ -1,1 +1,87 @@
 # DerivTrader
+
+AI-powered trading analyst that combines real-time market intelligence, behavioural coaching, and social media automation.
+
+Built for the **Deriv Hackathon 2026**, DerivTrader serves both retail and prop firm traders through a unified interface that turns complex market data into actionable understanding.
+
+---
+
+## 🚀 Overview
+
+DerivTrader is a split-view web platform featuring dashboard panels alongside a conversational AI analyst. It provides:
+- **Instant Market Intelligence:** Plain-language explanations of price movements and technical patterns.
+- **Behavioural Coaching:** Detection of emotional or impulsive trading patterns (FOMO, revenge trading) with timely nudges.
+- **Social Automation:** Autonomous AI personas that generate and draft market updates for LinkedIn and X.
+
+## ✨ Core Features (MVP)
+
+- **Real-time Market Ingestion:** Seamless integration with Deriv WebSocket API across all markets (Forex, Crypto, Synthetics, etc.).
+- **Conversational AI:** Unified chat handling market queries, behavioural feedback, and social content creation in one place.
+- **Split-View Dashboard:** Side-by-side view of live price charts, sentiment gauges, and the AI analyst chat.
+- **Behavioural Pattern Detection:** Identification of win/loss streaks and risk escalation with habit-building reinforcement.
+- **Social Content Drafting:** Platform-appropriate content generation (Professional for LinkedIn, concise for X).
+
+## 🏗️ Architecture
+
+DerivTrader uses a **Modular Monolith** architecture optimized for real-time data flow and AI inference:
+
+- **Frontend:** React (Vite) + TailwindCSS + shadcn/ui + Zustand.
+- **Backend:** FastAPI (Python) + Uvicorn + WebSockets.
+- **AI Engine:** Local LLM inference via **Ollama** (Llama 3.3 / Mistral).
+- **Data Source:** Deriv WebSocket API for real-time pricing and trade history.
+- **Persistence:** SQLite for trade history, session-based chat memory, and content drafts.
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| **Backend** | FastAPI, Uvicorn, websockets, python-deriv-api, pandas-ta |
+| **Frontend** | React 19, Vite, TanStack Query, Zustand, Recharts, Lightweight Charts |
+| **AI/ML** | Ollama (Llama 3.3), Pydantic v2 |
+| **Styling** | TailwindCSS 4, shadcn/ui |
+
+## 🚦 Quickstart
+
+### Prerequisites
+- Python 3.11+
+- Node.js & npm
+- [Ollama](https://ollama.com/) installed and running
+
+### 1. Backend Setup
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+### 2. LLM Setup
+```bash
+ollama pull llama3.3
+ollama serve
+```
+
+### 3. Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+## ⚠️ Key Pitfalls & Prevention
+
+- **WebSocket Timeouts:** Deriv API requires 30-second pings to prevent silent disconnection.
+- **LLM Hallucinations:** Numbers are parsed programmatically from Deriv API; the LLM is used only for narrative explanation.
+- **Render Performance:** High-frequency price ticks are managed via Zustand to avoid React Context re-render storms.
+
+## 🗺️ Roadmap
+
+- [ ] Persistent cross-session AI memory.
+- [ ] Multi-modal input (Analyze chart screenshots).
+- [ ] Automated regulatory compliance filters for social posts.
+- [ ] Mobile-native responsive application.
+
+---
+
+Built with ❤️ for the Deriv Hackathon.
